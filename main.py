@@ -3,6 +3,7 @@
 # client sends a request, server sends back a response
 
 import socket
+import time
 
 SERVER_HOST = "0.0.0.0"
 SERVER_PORT = 8080
@@ -15,13 +16,17 @@ server_socket = socket.socket( #establishes connection through 4 module things. 
 
 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) #integer shows its on, reuse address as soon as socket closes instead of waiting for default timer.
 # port 80 is HTTP, 443 is HTTPS
+server_socket.setblocking(False)
 server_socket.bind((SERVER_HOST, SERVER_PORT)) #host, port. establishes a socket we can connect to through opening a port on our host ip addy i believe. ports 0-1023 are reserved by operating system
 
 server_socket.listen(5) #backlog is maximum amount of connections that can be queued, the rest will be ignored (depends on OS)
 
 print(f"Listening on port 8080 {SERVER_PORT} ...") #fstring allows for variables
 
-
-client_socket, client_address = server_socket.accept() # this will listen and recieve data
-print(client_socket)
-print(client_address)
+while True: #infinite loop
+  try:
+    client_socket, client_address = server_socket.accept() # this will listen and recieve data. .accept blocks code until it recieves a response
+    print(client_socket)
+    print(client_address)
+  except:
+    time.sleep(1) # needs to be a try block as we set our blocking to false, so we try every second to see if we have recieved a request yet.
