@@ -23,10 +23,8 @@ server_socket.listen(5) #backlog is maximum amount of connections that can be qu
 
 print(f"Listening on port 8080 {SERVER_PORT} ...") #fstring allows for variables
 
-while True: #infinite loop
-  try:
-    client_socket, client_address = server_socket.accept() # this will listen and recieve data. .accept blocks code until it recieves a response
-    print(client_socket)
-    print(client_address)
-  except:
-    time.sleep(1) # needs to be a try block as we set our blocking to false, so we try every second to see if we have recieved a request yet.
+while True: 
+  client_socket, client_address = server_socket.accept() # this will listen and recieve data. .accept blocks code until it recieves a response
+  request = client_socket.recv(1500).decode #decode makes the bytes recieved into a string
+  print(request)
+
