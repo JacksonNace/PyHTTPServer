@@ -28,11 +28,11 @@ while True:
   request = client_socket.recv(1500).decode() #decode makes the bytes recieved into a string
   print(request)
 
-  headers = request.split('\n')
+  headers = request.split('\n') 
   first_header_components = headers[0].split()
 
-  http_method = first_header_components[0]
-  path = first_header_components[1]
+  http_method = first_header_components[0] # gets whatever http method is requested
+  path = first_header_components[1] # takes out the path "/", "/book"
 
   if http_method == 'GET':
     if path == '/':
@@ -40,16 +40,16 @@ while True:
     elif path == '/book':
       fin = open('book.json')
     else:
-      # handle the edge case
+      # handle random edge cases
       pass
         
-    content = fin.read()
-    fin.close()
+    content = fin.read() #file handling, reads all contents of file opened
+    fin.close() #after this it closes the file
     response = 'HTTP/1.1 200 OK\n\n' + content
   else:
     response = 'HTTP/1.1 405 Method Not Allowed\n\nAllow: GET'
 
-  client_socket.sendall(response.encode())
+  client_socket.sendall(response.encode()) # now sends the response to a client after putting it back into bytes
   client_socket.close()
 
 server_socket.close()
